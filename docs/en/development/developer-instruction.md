@@ -283,8 +283,6 @@ You can use the **Woboq** online code browser available [here](https://clickhous
 
 Alternatively, you can browse sources on [GitHub](https://github.com/ClickHouse/ClickHouse).
 
-We recommend CLion, QT Creator, VS Code and KDevelop (with caveats) as IDE but Vim and Emacs also count.
-
 ## Faster builds for development: Split build configuration {#split-build}
 
 ClickHouse is normally statically linked into a single static `clickhouse` binary with minimal dependencies. This is convenient for distribution, but it means that for every change the entire binary needs to be re-linked, which is slow and inconvenient for development. As an alternative, you can instead build dynamically linked shared libraries and separate binaries `clickhouse-server`, `clickhouse-client` etc., allowing for faster incremental builds. To use it, add the following flags to your `cmake` invocation:
