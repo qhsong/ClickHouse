@@ -243,7 +243,7 @@ void MergeTreeBaseSelectProcessor::initializeMergeTreeReadersForPart(
 
     /// Add lightweight delete filtering step
     const auto & lightweigth_delete_info = metadata_snapshot->lightweight_delete_description;
-    if (reader_settings.apply_deleted_mask && data_part->getColumns().contains(lightweigth_delete_info.filter_column.name))
+    if (reader_settings.apply_deleted_mask && data_part->hasLightweightDelete())
     {
         pre_reader_for_step.push_back(data_part->getReader({lightweigth_delete_info.filter_column}, metadata_snapshot, mark_ranges,
                 owned_uncompressed_cache.get(), owned_mark_cache.get(), reader_settings,
@@ -268,8 +268,8 @@ void MergeTreeBaseSelectProcessor::initializeRangeReaders(MergeTreeReadTask & cu
     size_t pre_readers_shift = 0;
 
     /// Add filtering step with lightweight delete mask
-    const auto & lightweigth_delete_info = storage_snapshot->metadata->lightweight_delete_description;
-    if (reader_settings.apply_deleted_mask && current_task.data_part->getColumns().contains(lightweigth_delete_info.filter_column.name))
+//    const auto & lightweigth_delete_info = storage_snapshot->metadata->lightweight_delete_description;
+    if (reader_settings.apply_deleted_mask && current_task.data_part->hasLightweightDelete())
     {
         current_task.pre_range_readers.push_back(
             MergeTreeRangeReader(pre_reader_for_step[0].get(), prev_reader, &lwd_filter_step, last_reader, non_const_virtual_column_names));

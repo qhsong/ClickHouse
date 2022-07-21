@@ -453,10 +453,6 @@ NameSet collectFilesToSkip(
 {
     NameSet files_to_skip = source_part->getFileNamesWithoutChecksums();
 
-    /// Remove deleted rows mask file name to create hard link for it when mutate some columns.
-    if (files_to_skip.contains(IMergeTreeDataPart::DELETED_ROWS_MARK_FILE_NAME))
-        files_to_skip.erase(IMergeTreeDataPart::DELETED_ROWS_MARK_FILE_NAME);
-
     /// Skip updated files
     for (const auto & entry : updated_header)
     {
@@ -1526,7 +1522,6 @@ bool MutateTask::prepare()
 
     ctx->new_data_part->setColumns(new_columns);
     ctx->new_data_part->setSerializationInfos(new_infos);
-
     ctx->new_data_part->partition.assign(ctx->source_part->partition);
 
     /// Don't change granularity type while mutating subset of columns
