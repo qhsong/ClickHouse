@@ -19,7 +19,10 @@ from report import create_build_html_report
 from s3_helper import S3Helper
 from get_robot_token import get_best_robot_token
 from pr_info import PRInfo
-from commit_status_helper import get_commit
+from commit_status_helper import (
+    get_commit,
+    fail_simple_check,
+)
 from ci_config import CI_CONFIG
 from rerun_helper import RerunHelper
 
@@ -228,6 +231,7 @@ def main():
     total_groups = len(build_results)
     logging.info("Totally got %s artifact groups", total_groups)
     if total_groups == 0:
+        fail_simple_check(gh, pr_info, f"{build_check_name} failed")
         logging.error("No success builds, failing check")
         sys.exit(1)
 
@@ -297,6 +301,7 @@ def main():
     )
 
     if summary_status == "error":
+        fail_simple_check(gh, pr_info, f"{build_check_name} failed")
         sys.exit(1)
 
 
