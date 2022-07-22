@@ -156,7 +156,7 @@ def main():
             
     # A report might be empty in case of `do not test` label, for example.
     # We should still be able to merge such PRs.
-    all_skipped = (needs_data is None or all(i["result"] == "skipped" for i in needs_data.values())):
+    all_skipped = (needs_data is None or all(i["result"] == "skipped" for i in needs_data.values()))
 
     logging.info("The next builds are required: %s", ", ".join(needs_data))
 
