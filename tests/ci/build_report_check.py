@@ -156,7 +156,7 @@ def main():
 
     # A report might be empty in case of `do not test` label, for example.
     # We should still be able to merge such PRs.
-    all_skipped = (needs_data is None or all(
+    all_skipped = (needs_data is not None and all(
         i["result"] == "skipped" for i in needs_data.values())
     )
 
