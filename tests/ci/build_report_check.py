@@ -153,10 +153,12 @@ def main():
         with open(NEEDS_DATA_PATH, "rb") as file_handler:
             needs_data = json.load(file_handler)
             required_builds = len(needs_data)
-            
+
     # A report might be empty in case of `do not test` label, for example.
     # We should still be able to merge such PRs.
-    all_skipped = (needs_data is None or all(i["result"] == "skipped" for i in needs_data.values()))
+    all_skipped = (needs_data is None or all(
+        i["result"] == "skipped" for i in needs_data.values())
+    )
 
     logging.info("The next builds are required: %s", ", ".join(needs_data))
 
