@@ -153,6 +153,10 @@ def main():
         with open(NEEDS_DATA_PATH, "rb") as file_handler:
             needs_data = json.load(file_handler)
             required_builds = len(needs_data)
+            
+    # A report might be empty in case of `do not test` label, for example.
+    # We should still be able to merge such PRs.
+    all_skipped = (needs_data is None or all(i["result"] == "skipped" for i in needs_data.values())):
 
     logging.info("The next builds are required: %s", ", ".join(needs_data))
 
@@ -231,9 +235,7 @@ def main():
     total_groups = len(build_results)
     logging.info("Totally got %s artifact groups", total_groups)
     if total_groups == 0:
-        # A report might be empty in case of `do not test` label, for example.
-        # We should still be able to merge such PRs
-        if needs_data and any(i["result"] != "skipped" for i in needs_data.values()):
+        if not all_skipped:
             fail_simple_check(gh, pr_info, f"{build_check_name} failed")
         logging.error("No success builds, failing check")
         sys.exit(1)
@@ -304,9 +306,7 @@ def main():
     )
 
     if summary_status == "error":
-        # A report might be empty in case of `do not test` label, for example.
-        # We should still be able to merge such PRs
-        if needs_data and any(i["result"] != "skipped" for i in needs_data.values()):
+        if not all_skipped:
             fail_simple_check(gh, pr_info, f"{build_check_name} failed")
         sys.exit(1)
 
