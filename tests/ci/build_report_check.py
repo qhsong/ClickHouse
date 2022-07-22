@@ -304,7 +304,10 @@ def main():
     )
 
     if summary_status == "error":
-        fail_simple_check(gh, pr_info, f"{build_check_name} failed")
+        # A report might be empty in case of `do not test` label, for example.
+        # We should still be able to merge such PRs
+        if needs_data and any(i["result"] != "skipped" for i in needs_data.values()):
+            fail_simple_check(gh, pr_info, f"{build_check_name} failed")
         sys.exit(1)
 
 
